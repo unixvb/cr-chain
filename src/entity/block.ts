@@ -10,7 +10,16 @@ export class Block {
     }
 
     public static genesis () {
-        return new this(10000001, '-----', 'g3n3515-f1r5t-h45h', [])
+        return new Block(10000001, '-----', 'g3n3515-f1r5t-h45h', [])
+    }
+
+    public static mineBlock(lastBlock: Block, data: any) {
+        const timestamp = Date.now();
+        const lastHash = lastBlock.hash;
+        // TODO: implement hash fn
+        const hash = 'todo-hash';
+
+        return new Block(timestamp, lastHash, hash, data);
     }
 
     public toString = () => {

@@ -1,5 +1,5 @@
 import {Block} from "./entity/block";
 
-const block = new Block(123, 'test', 'wow', {awesome: 'data'});
+const fooBlock = Block.mineBlock(Block.genesis(), 'foo');
 
-console.log(block.toString());
+console.log(fooBlock.toString());
