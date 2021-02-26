@@ -1,5 +1,5 @@
-const greet = (name: string): void  => {
-    console.log("Hello", name);
-}
+import {Block} from "./entity/block";
 
-greet("World");
+const block = new Block(123, 'test', 'wow', {awesome: 'data'});
+
+console.log(block.toString());
