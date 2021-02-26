@@ -9,6 +9,10 @@ export class Block {
     ) {
     }
 
+    public static genesis () {
+        return new this(10000001, '-----', 'g3n3515-f1r5t-h45h', [])
+    }
+
     public toString = () => {
         return `Block -
             Timestamp: ${this.timestamp}
