@@ -1,3 +1,4 @@
+import { SHA256 } from "crypto-js";
 import { shortHash } from "../util/hash.util";
 
 export class Block {
@@ -16,10 +17,13 @@ export class Block {
     public static mineBlock(lastBlock: Block, data: any) {
         const timestamp = Date.now();
         const lastHash = lastBlock.hash;
-        // TODO: implement hash fn
-        const hash = 'todo-hash';
+        const hash = Block.hash(timestamp, lastHash, data);
 
         return new Block(timestamp, lastHash, hash, data);
+    }
+
+    public static hash(timestamp: number, lastHash: string, data: any) {
+        return SHA256(`${timestamp}${lastHash}${data}`).toString();
     }
 
     public toString = () => {
