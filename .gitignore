@@ -1,12 +1,15 @@
 # dependencies
 /node_modules
 
-# production
-/build
+# Build
+/dist
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Tests
+/coverage
 
 # IDEs and editors
 .idea
