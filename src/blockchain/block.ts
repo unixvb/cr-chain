@@ -1,7 +1,6 @@
-import {SHA256} from "crypto-js";
-
 import { shortHash } from "../util/hash.util";
 import {DIFFICULTY, MINE_RATE} from "../config";
+import { generateHash } from "../util/chain.util";
 
 export class Block {
     constructor(
@@ -39,7 +38,7 @@ export class Block {
     }
 
     static hash(timestamp: number, lastHash: string, data: any, nonce: number, difficulty: number) {
-        return SHA256(`${timestamp}${lastHash}${data}${nonce}${difficulty}`).toString();
+        return generateHash(`${timestamp}${lastHash}${data}${nonce}${difficulty}`);
     }
 
     static blockHash(block: Block) {

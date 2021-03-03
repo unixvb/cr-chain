@@ -1,14 +1,23 @@
-import {uuidv4} from "../util/chain.util";
+import {ec} from "elliptic";
+import {generateHash, uuidv4} from "../util/chain.util";
 import {Wallet} from "./index";
 
-interface TransactionOutputItem {
+interface TransactionBaseInfo {
     amount: number;
     address: string;
 }
 
+interface TransactionOutputItem extends TransactionBaseInfo {
+}
+
+interface TransactionInput extends TransactionBaseInfo {
+    timestamp: number,
+    signature: ec.Signature
+}
+
 export class Transaction {
     id = uuidv4();
-    input = null;
+    input: TransactionInput | undefined;
     output: TransactionOutputItem[] = [];
 
     static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
@@ -24,7 +33,17 @@ export class Transaction {
             {amount, address: recipient}
         );
 
+        Transaction.signTransaction(transaction, senderWallet);
+
         return transaction;
     }
 
+    static signTransaction(transaction: Transaction, senderWallet: Wallet) {
+        transaction.input = {
+            timestamp: Date.now(),
+            amount: senderWallet.balance,
+            address: senderWallet.publicKey,
+            signature: senderWallet.sign(generateHash(transaction.output))
+        }
+    }
 }

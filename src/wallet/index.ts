@@ -1,9 +1,9 @@
 import {INITIAL_BALANCE} from "../config";
-import {genKeyPair} from "../util/chain.util";
+import {generateKeyPair} from "../util/chain.util";
 
 export class Wallet {
     public balance = INITIAL_BALANCE;
-    public keyPair = genKeyPair();
+    public keyPair = generateKeyPair();
     public publicKey = this.keyPair.getPublic().encode('hex', true);
 
     toString() {
@@ -11,4 +11,9 @@ export class Wallet {
         publicKey: ${this.publicKey.toString()}
         balance  : ${this.balance}`;
     }
+
+    sign(dataHash: string) {
+        return this.keyPair.sign(dataHash);
+    }
+
 }

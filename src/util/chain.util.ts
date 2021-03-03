@@ -1,7 +1,12 @@
 import {ec} from 'elliptic';
-
-const EC = new ec('curve25519');
-
-export const genKeyPair = () =>  EC.genKeyPair();
+import {SHA256} from "crypto-js";
 
 export { v4 as uuidv4 } from 'uuid';
+
+// TODO: figure out how to migrate to curve25519
+// http://safecurves.cr.yp.to/
+const EC = new ec('secp256k1');
+
+export const generateKeyPair = () =>  EC.genKeyPair();
+
+export const generateHash = (data: any) => SHA256(JSON.stringify(data)).toString();
