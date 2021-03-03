@@ -1,4 +1,5 @@
 import {Block} from "./block";
+import {DIFFICULTY} from "../config";
 
 const sum = (a: number, b: number) => a + b;
 
@@ -17,5 +18,9 @@ describe('Block', () => {
 
     it('sets the `lastHash` to match the hash of the last block', () => {
         expect(block.lastHash).toEqual(lastBlock.hash);
+    });
+
+    it('generate hash that matches difficulty', () => {
+        expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY));
     });
 });
