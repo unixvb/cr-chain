@@ -4,14 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --config nodemon.json src/index.ts"
+    "start": "nodemon --config nodemon.json src/index.ts",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.13.8",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/preset-typescript": "^7.13.0",
     "@types/crypto-js": "^4.0.1",
+    "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.2"
