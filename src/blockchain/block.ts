@@ -1,7 +1,7 @@
 import {SHA256} from "crypto-js";
 
+import { shortHash } from "../util/hash.util";
 import {DIFFICULTY, MINE_RATE} from "../config";
-import {shortHash} from "./util/hash.util";
 
 export class Block {
     constructor(
