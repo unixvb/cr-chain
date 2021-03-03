@@ -1,7 +1,4 @@
 import {Block} from "./block";
-import {DIFFICULTY} from "../config";
-
-const sum = (a: number, b: number) => a + b;
 
 describe('Block', () => {
     let data: any, lastBlock: Block, block: Block;
@@ -21,6 +18,14 @@ describe('Block', () => {
     });
 
     it('generate hash that matches difficulty', () => {
-        expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY));
+        expect(block.hash.substring(0, block.difficulty)).toEqual('0'.repeat(block.difficulty));
     });
+
+    it('lowers the difficulty for slowly mined blocks', () => {
+        expect(Block.adjustDifficulty(block, block.timestamp + 60 * 60 * 1000)).toEqual(block.difficulty - 1);
+    })
+
+    it('increase the difficulty for fast mined blocks', () => {
+        expect(Block.adjustDifficulty(block, block.timestamp + 1)).toEqual(block.difficulty + 1);
+    })
 });
