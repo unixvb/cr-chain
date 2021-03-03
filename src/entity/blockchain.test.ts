@@ -40,4 +40,26 @@ describe('Blockchain', () => {
 
         expect(blockchain.isValidChain(blockchain2.chain)).toBe(false);
     });
+
+    it('replaces a chain with a valid chain', () => {
+        blockchain2.addBlock('meow');
+        blockchain.replaceChain(blockchain2.chain);
+
+        expect(blockchain.chain).toEqual(blockchain2.chain)
+    });
+
+    it('does not replace a chain with one less than length', () => {
+        blockchain.addBlock('foo');
+        blockchain.replaceChain(blockchain2.chain);
+
+        expect(blockchain.chain).not.toEqual(blockchain2.chain);
+    });
+
+    it('does not replace a chain with one equal to length', () => {
+        blockchain.addBlock('foo');
+        blockchain2.addBlock('moo');
+        blockchain.replaceChain(blockchain2.chain);
+
+        expect(blockchain.chain).not.toEqual(blockchain2.chain);
+    });
 });
