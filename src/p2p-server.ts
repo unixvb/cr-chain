@@ -27,13 +27,34 @@ export class P2PServer {
         this.sockets.push(socket);
 
         console.log('Socket connected');
+
+        this.messageHandler(socket);
+
+        this.sendChain(socket);
     }
 
-    connectToPeers () {
+    connectToPeers() {
         peers.forEach(peer => {
             const socket = new WebSocket(peer);
 
-            socket.on('open' , () => this.connectSocket(socket));
+            socket.on('open', () => this.connectSocket(socket));
         });
+    }
+
+    messageHandler(socket: WebSocket) {
+        socket.on('message', message => {
+            const data = JSON.parse(message.toString());
+
+            this.blockchain.replaceChain(data);
+        })
+    }
+
+    sendChain(socket: WebSocket) {
+        socket.send(JSON.stringify(this.blockchain.chain));
+    }
+
+
+    syncChains() {
+        this.sockets.forEach(socket => this.sendChain(socket));
     }
 }
