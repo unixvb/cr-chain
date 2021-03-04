@@ -1,5 +1,5 @@
 import {ec} from "elliptic";
-import {generateHash, uuidv4} from "../util/chain.util";
+import {generateHash, uuidv4, verifySignature} from "../util/chain.util";
 import {Wallet} from "./index";
 
 interface TransactionBaseInfo {
@@ -17,7 +17,8 @@ interface TransactionInput extends TransactionBaseInfo {
 
 export class Transaction {
     id = uuidv4();
-    input: TransactionInput | undefined;
+    // @ts-ignore
+    input: TransactionInput;
     output: TransactionOutputItem[] = [];
 
     static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
@@ -45,5 +46,9 @@ export class Transaction {
             address: senderWallet.publicKey,
             signature: senderWallet.sign(generateHash(transaction.output))
         }
+    }
+
+    static verifyTransaction(transaction: Transaction) {
+        return verifySignature(transaction.input.address, transaction.input.signature, generateHash(transaction.output));
     }
 }

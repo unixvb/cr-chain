@@ -1,11 +1,12 @@
 import {Block} from "./block";
 
 describe('Block', () => {
-    let data: any, lastBlock: Block, block: Block;
+    const data = 'bar';
+    const lastBlock = Block.genesis();
+
+    let block = Block.mineBlock(lastBlock, data);
 
     beforeEach(() => {
-        data = 'bar';
-        lastBlock = Block.genesis();
         block = Block.mineBlock(lastBlock, data);
     });
 

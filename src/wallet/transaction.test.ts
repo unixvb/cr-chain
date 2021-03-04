@@ -2,15 +2,13 @@ import {Transaction} from "./transaction";
 import {Wallet} from "./index";
 
 describe('Transaction', () => {
-    let transaction: Transaction | undefined;
-    let wallet: Wallet;
-    let amount: number;
-    let recipient: string;
+    const wallet = new Wallet();
+    const amount = 100;
+    const recipient = 'r3c1p1ent';
+
+    let transaction = Transaction.newTransaction(wallet, recipient, amount);
 
     beforeEach(() => {
-        wallet = new Wallet();
-        amount = 100;
-        recipient = 'r3c1p1ent';
         transaction = Transaction.newTransaction(wallet, recipient, amount);
     });
 
@@ -31,4 +29,18 @@ describe('Transaction', () => {
     it('inputs the balance of the wallet', () => {
         expect(transaction?.input?.amount).toEqual(wallet.balance);
     });
+
+    it('validates a valid transaction', () => {
+        if (transaction) {
+            expect(Transaction.verifyTransaction(transaction)).toEqual(true);
+        }
+    })
+
+    it('invalidates a corrupt transaction', () => {
+        if (transaction) {
+            transaction.output[0].amount = 5000;
+
+            expect(Transaction.verifyTransaction(transaction)).toEqual(false);
+        }
+    })
 });
