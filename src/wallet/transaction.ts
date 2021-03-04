@@ -25,7 +25,7 @@ export class Transaction {
         const transaction = new this();
 
         if (amount > senderWallet.balance) {
-            console.log(`Amount: ${amount} exceed balance.`);
+            console.log(`Amount: ${amount} exceeds the balance.`);
             return;
         }
 
@@ -50,5 +50,24 @@ export class Transaction {
 
     static verifyTransaction(transaction: Transaction) {
         return verifySignature(transaction.input.address, transaction.input.signature, generateHash(transaction.output));
+    }
+
+    update(senderWallet: Wallet, recipient: string, amount: number) {
+        const senderOutput = this.output.find(output => output.address === senderWallet.publicKey);
+
+        if (!senderOutput) {
+            return;
+        }
+
+        if (amount > senderOutput.amount) {
+            console.log(`Amount: ${amount} exceeds the balance.`);
+            return;
+        }
+
+        senderOutput.amount = senderOutput.amount - amount;
+        this.output.push({amount, address: recipient});
+        Transaction.signTransaction(this, senderWallet);
+
+        return this;
     }
 }
