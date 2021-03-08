@@ -1,18 +1,13 @@
 import {Server} from "ws";
 import WebSocket = require("ws");
 
-import {Blockchain} from "./blockchain";
-import {TransactionPool} from "./wallet/transaction-pool";
-import {Transaction} from "./wallet/transaction";
+import {TransactionPool} from "../wallet/transaction-pool";
+import {Blockchain} from "../blockchain";
+import {Transaction} from "../wallet/transaction";
+import {MessageTypeEnum} from "./message-type.enum";
 
 const P2P_PORT = process.env.P2P_PORT ? +process.env.P2P_PORT : 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
-
-enum MessageTypes {
-    Chain = 'Chain',
-    Transaction = 'Transaction',
-    ClearTransaction = 'ClearTransaction'
-}
 
 export class P2PServer {
     sockets: WebSocket[] = [];
@@ -55,13 +50,13 @@ export class P2PServer {
             const data = JSON.parse(message.toString());
 
             switch (data.type) {
-                case MessageTypes.Chain:
+                case MessageTypeEnum.Chain:
                     this.blockchain.replaceChain(data.chain);
                     break;
-                case MessageTypes.Transaction:
+                case MessageTypeEnum.Transaction:
                     this.transactionPool.updateOrAddTransaction(data.transaction)
                     break;
-                case MessageTypes.ClearTransaction:
+                case MessageTypeEnum.ClearTransaction:
                     this.transactionPool.clear();
                     break
             }
@@ -71,7 +66,7 @@ export class P2PServer {
 
     sendChain(socket: WebSocket) {
         socket.send(JSON.stringify({
-            type: MessageTypes.Chain,
+            type: MessageTypeEnum.Chain,
             chain: this.blockchain.chain
         }));
     }
@@ -82,14 +77,14 @@ export class P2PServer {
 
     broadcastTransaction(transaction: Transaction) {
         this.sockets.forEach(socket => socket.send(JSON.stringify({
-            type: MessageTypes.Transaction,
+            type: MessageTypeEnum.Transaction,
             transaction
         })))
     }
 
     broadcastClearTransactions() {
         this.sockets.forEach(socket => socket.send(JSON.stringify({
-            type: MessageTypes.ClearTransaction
+            type: MessageTypeEnum.ClearTransaction
         })))
     }
 }
