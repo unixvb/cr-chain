@@ -1,4 +1,4 @@
-###Implementation of Blockchain and cryptocurrencies including: 
+##Implementation of Blockchain and cryptocurrencies including: 
 
  - Proof-of-Work consensus
  - UTXO based ledger
