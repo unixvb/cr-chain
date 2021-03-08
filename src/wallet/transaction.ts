@@ -19,7 +19,7 @@ export class Transaction {
     id = uuidv4();
     // @ts-ignore
     input: TransactionInput;
-    output: TransactionOutputItem[] = [];
+    outputs: TransactionOutputItem[] = [];
 
     static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
         const transaction = new this();
@@ -29,7 +29,7 @@ export class Transaction {
             return;
         }
 
-        transaction.output.push(
+        transaction.outputs.push(
             {amount: senderWallet.balance - amount, address: senderWallet.publicKey},
             {amount, address: recipient}
         );
@@ -44,16 +44,16 @@ export class Transaction {
             timestamp: Date.now(),
             amount: senderWallet.balance,
             address: senderWallet.publicKey,
-            signature: senderWallet.sign(generateHash(transaction.output))
+            signature: senderWallet.sign(generateHash(transaction.outputs))
         }
     }
 
     static verifyTransaction(transaction: Transaction) {
-        return verifySignature(transaction.input.address, transaction.input.signature, generateHash(transaction.output));
+        return verifySignature(transaction.input.address, transaction.input.signature, generateHash(transaction.outputs));
     }
 
     update(senderWallet: Wallet, recipient: string, amount: number) {
-        const senderOutput = this.output.find(output => output.address === senderWallet.publicKey);
+        const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
 
         if (!senderOutput) {
             return;
@@ -65,7 +65,7 @@ export class Transaction {
         }
 
         senderOutput.amount = senderOutput.amount - amount;
-        this.output.push({amount, address: recipient});
+        this.outputs.push({amount, address: recipient});
         Transaction.signTransaction(this, senderWallet);
 
         return this;

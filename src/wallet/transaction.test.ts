@@ -13,11 +13,11 @@ describe('Transaction', () => {
     });
 
     it('outputs the `amount` subtracted from the wallet balance', () => {
-        expect(transaction?.output.find(output => output.address === wallet.publicKey)?.amount).toEqual(wallet.balance - amount);
+        expect(transaction?.outputs.find(output => output.address === wallet.publicKey)?.amount).toEqual(wallet.balance - amount);
     });
 
     it('outputs the `amount` added to the recipient balance', () => {
-        expect(transaction?.output.find(output => output.address === recipient)?.amount).toEqual(amount);
+        expect(transaction?.outputs.find(output => output.address === recipient)?.amount).toEqual(amount);
     });
 
     it('does not create a transaction if balance is exceeded', () => {
@@ -38,7 +38,7 @@ describe('Transaction', () => {
 
     it('invalidates a corrupt transaction', () => {
         if (transaction) {
-            transaction.output[0].amount = 5000;
+            transaction.outputs[0].amount = 5000;
 
             expect(Transaction.verifyTransaction(transaction)).toEqual(false);
         }
@@ -53,12 +53,12 @@ describe('Transaction', () => {
         });
 
         it('subtract the next amount from the senders output', () => {
-            expect(transaction?.output.find(output => output.address === wallet.publicKey)?.amount)
+            expect(transaction?.outputs.find(output => output.address === wallet.publicKey)?.amount)
                 .toEqual(wallet.balance - amount - nextAmount);
         });
 
         it('outputs an amount for the next recipient', () => {
-            expect(transaction?.output.find(output => output.address === nextRecipient)?.amount)
+            expect(transaction?.outputs.find(output => output.address === nextRecipient)?.amount)
                 .toEqual(nextAmount);
         });
     })
