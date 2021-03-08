@@ -37,10 +37,8 @@ export class Blockchain<T = Transaction> {
             return;
         }
 
-        console.log("WTF");
-
         if (!this.isValidChain(newChain)) {
-            console.log('!@# Received chain is not valid');
+            console.log('Received chain is not valid');
 
             return;
         }

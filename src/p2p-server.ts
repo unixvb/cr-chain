@@ -35,7 +35,7 @@ export class P2PServer {
     connectSocket(socket: WebSocket) {
         this.sockets.push(socket);
 
-        console.log('Socket connected WOW');
+        console.log('Socket connected');
 
         this.messageHandler(socket);
 
@@ -56,7 +56,7 @@ export class P2PServer {
 
             switch (data.type) {
                 case MessageTypes.Chain:
-                    this.blockchain.replaceChain(data);
+                    this.blockchain.replaceChain(data.chain);
                     break;
                 case MessageTypes.Transaction:
                     this.transactionPool.updateOrAddTransaction(data.transaction)
