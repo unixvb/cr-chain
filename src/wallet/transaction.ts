@@ -1,6 +1,7 @@
 import {ec} from "elliptic";
 import {generateHash, uuidv4, verifySignature} from "../util/chain.util";
 import {Wallet} from "./index";
+import {MINING_REWARD} from "../config";
 
 interface TransactionBaseInfo {
     amount: number;
@@ -21,22 +22,31 @@ export class Transaction {
     input: TransactionInput;
     outputs: TransactionOutputItem[] = [];
 
-    static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
+    static transactionWithOutputs(senderWallet: Wallet, outputs: TransactionOutputItem[]) {
         const transaction = new this();
 
+        transaction.outputs.push(...outputs);
+        Transaction.signTransaction(transaction, senderWallet);
+
+        return transaction;
+    }
+
+    static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
         if (amount > senderWallet.balance) {
             console.log(`Amount: ${amount} exceeds the balance.`);
             return;
         }
 
-        transaction.outputs.push(
+        return Transaction.transactionWithOutputs(senderWallet, [
             {amount: senderWallet.balance - amount, address: senderWallet.publicKey},
-            {amount, address: recipient}
+            {amount, address: recipient}],
         );
+    }
 
-        Transaction.signTransaction(transaction, senderWallet);
-
-        return transaction;
+    static rewardTransaction(minerWallet: Wallet, blockchainWallet: Wallet) {
+        return Transaction.transactionWithOutputs(blockchainWallet, [
+            {amount: MINING_REWARD, address: minerWallet.publicKey}
+        ])
     }
 
     static signTransaction(transaction: Transaction, senderWallet: Wallet) {

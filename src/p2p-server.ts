@@ -10,7 +10,8 @@ const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 enum MessageTypes {
     Chain = 'Chain',
-    Transaction = 'Transaction'
+    Transaction = 'Transaction',
+    ClearTransaction = 'ClearTransaction'
 }
 
 export class P2PServer {
@@ -60,6 +61,9 @@ export class P2PServer {
                 case MessageTypes.Transaction:
                     this.transactionPool.updateOrAddTransaction(data.transaction)
                     break;
+                case MessageTypes.ClearTransaction:
+                    this.transactionPool.clear();
+                    break
             }
 
         })
@@ -76,14 +80,16 @@ export class P2PServer {
         this.sockets.forEach(socket => this.sendChain(socket));
     }
 
-    sendTransaction(socket: WebSocket, transaction: Transaction) {
-        socket.send(JSON.stringify({
+    broadcastTransaction(transaction: Transaction) {
+        this.sockets.forEach(socket => socket.send(JSON.stringify({
             type: MessageTypes.Transaction,
             transaction
-        }))
+        })))
     }
 
-    broadcastTransaction(transaction: Transaction) {
-        this.sockets.forEach(socket => this.sendTransaction(socket, transaction))
+    broadcastClearTransactions() {
+        this.sockets.forEach(socket => socket.send(JSON.stringify({
+            type: MessageTypes.ClearTransaction
+        })))
     }
 }

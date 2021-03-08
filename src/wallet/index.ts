@@ -35,4 +35,12 @@ export class Wallet {
 
         return transaction;
     }
+
+    static blockchainWallet() {
+        const blockchainWallet = new this();
+        blockchainWallet.publicKey = 'bl0ckch41n-w4ll3t';
+
+        return blockchainWallet;
+
+    }
 }
