@@ -1,7 +1,7 @@
 import {Block} from "./block";
 
 describe('Block', () => {
-    const data = 'bar';
+    const data = ['bar'];
     const lastBlock = Block.genesis();
 
     let block = Block.mineBlock(lastBlock, data);

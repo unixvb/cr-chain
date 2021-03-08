@@ -1,13 +1,13 @@
-import { shortHash } from "../util/hash.util";
+import {shortHash} from "../util/hash.util";
 import {DIFFICULTY, MINE_RATE} from "../config";
-import { generateHash } from "../util/chain.util";
+import {generateHash} from "../util/chain.util";
 
-export class Block {
+export class Block<T> {
     constructor(
         public timestamp: number,
         public lastHash: string,
         public hash: string,
-        public data: any,
+        public data: T[],
         public nonce: number,
         public difficulty = DIFFICULTY
     ) {
@@ -17,7 +17,7 @@ export class Block {
         return new Block(10000001, '-----', 'g3n3515-f1r5t-h45h', [], 0);
     }
 
-    static mineBlock(lastBlock: Block, data: any) {
+    static mineBlock<T>(lastBlock: Block<T>, data: T[]) {
         const lastHash = lastBlock.hash;
         let {difficulty} = lastBlock;
 
@@ -41,16 +41,16 @@ export class Block {
         return generateHash(`${timestamp}${lastHash}${data}${nonce}${difficulty}`);
     }
 
-    static blockHash(block: Block) {
+    static blockHash<T>(block: Block<T>) {
         const {timestamp, lastHash, data, nonce, difficulty} = block;
 
         return Block.hash(timestamp, lastHash, data, nonce, difficulty);
     }
 
-    static adjustDifficulty(lastBlock: Block, currentTimestamp: number) {
-        let { difficulty } = lastBlock;
+    static adjustDifficulty<T>(lastBlock: Block<T>, currentTimestamp: number) {
+        let {difficulty} = lastBlock;
 
-        return  lastBlock.timestamp + MINE_RATE > currentTimestamp ? difficulty + 1 : difficulty -1;
+        return lastBlock.timestamp + MINE_RATE > currentTimestamp ? difficulty + 1 : difficulty - 1;
     }
 
     toString = () => {

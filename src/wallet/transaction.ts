@@ -33,7 +33,8 @@ export class Transaction {
 
     static newTransaction(senderWallet: Wallet, recipient: string, amount: number) {
         if (amount > senderWallet.balance) {
-            console.log(`Amount: ${amount} exceeds the balance.`);
+            console.error(`Amount: ${amount} exceeds the balance.`);
+
             return;
         }
 
@@ -66,11 +67,14 @@ export class Transaction {
         const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
 
         if (!senderOutput) {
+            console.error(`No sender ${senderWallet.publicKey} output found`);
+
             return;
         }
 
         if (amount > senderOutput.amount) {
-            console.log(`Amount: ${amount} exceeds the balance.`);
+            console.error(`Amount: ${amount} exceeds the balance.`);
+
             return;
         }
 

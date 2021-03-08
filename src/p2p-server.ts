@@ -35,7 +35,7 @@ export class P2PServer {
     connectSocket(socket: WebSocket) {
         this.sockets.push(socket);
 
-        console.log('Socket connected');
+        console.log('Socket connected WOW');
 
         this.messageHandler(socket);
 
